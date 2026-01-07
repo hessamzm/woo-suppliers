@@ -1,9 +1,16 @@
 <?php
 /**
  * Plugin Name: Lapx Supplier Manager & SKU Generator
+ * Plugin URI: https://github.com/hessamzm/woo-suppliers
  * Description: سیستم ماژولار مدیریت تامین‌کنندگان و تولید هوشمند SKU برای لاپکس.
  * Version: 1.1.0
  * Author: hessamzm
+ * Author URI: https://github.com/hessamzm
+ * Requires PHP: 7.4
+ * Requires at least: 5.6
+ * WC requires at least: 10.0
+ * Tested up to: 6.5
+ * Recommended PHP: 8.2
  */
 
 if (!defined('ABSPATH')) exit;
