@@ -1,12 +1,14 @@
 <?php
 class LP_Product {
     public function __construct() {
-        // فیلد محصول ساده
+        // محصولات ساده
         add_action('woocommerce_product_options_general_product_data', array($this, 'add_supplier_field'));
-        add_action('woocommerce_process_product_meta', array($this, 'save_product_data'));
+        add_action('woocommerce_admin_process_product_object', array($this, 'process_product_sku_logic'));
 
-        // فیلد محصول متغیر
+        // محصولات متغیر (Variations)
+        // نمایش فیلد در تنظیمات هر متغیر
         add_action('woocommerce_product_after_variable_attributes', array($this, 'add_variation_field'), 10, 3);
+        // ذخیره اطلاعات متغیر و تولید SKU
         add_action('woocommerce_save_product_variation', array($this, 'save_variation_data'), 10, 2);
     }
 
@@ -17,22 +19,50 @@ class LP_Product {
 
         woocommerce_wp_select(array(
             'id' => '_supplier_id',
-            'label' => 'تامین‌کننده',
+            'label' => 'تامین‌کننده (محصول از)',
             'options' => $options,
         ));
     }
 
-    public function save_product_data($post_id) {
-        if (!isset($_POST['_supplier_id']) || empty($_POST['_supplier_id'])) return;
-
-        $sid = sanitize_text_field($_POST['_supplier_id']);
-        update_post_meta($post_id, '_supplier_id', $sid);
-
-        $sku = LP_Helper::generate_sku($post_id, $sid);
-        $product = wc_get_product($post_id);
-        $product->set_sku($sku);
-        $product->save();
+    public function process_product_sku_logic($product) {
+        if (isset($_POST['_supplier_id']) && !empty($_POST['_supplier_id'])) {
+            $sid = sanitize_text_field($_POST['_supplier_id']);
+            $product->update_meta_data('_supplier_id', $sid);
+            $new_sku = LP_Helper::generate_sku($product->get_id(), $sid);
+            $product->set_sku($new_sku);
+        }
     }
 
-    // متدهای مشابه برای Variation ها را اینجا اضافه کنید...
+    // --- بخش محصولات متغیر ---
+
+    public function add_variation_field($loop, $variation_data, $variation) {
+        $suppliers = LP_Helper::get_suppliers();
+        $options = array('' => '--- انتخاب تامین‌کننده ---');
+        foreach ($suppliers as $id => $name) { $options[$id] = "($id) $name"; }
+
+        woocommerce_wp_select(array(
+            'id' => '_supplier_id[' . $loop . ']',
+            'label' => 'تامین‌کننده این متغیر',
+            'value' => get_post_meta($variation->ID, '_supplier_id', true),
+            'options' => $options,
+            'wrapper_class' => 'form-row form-row-full',
+        ));
+    }
+
+    public function save_variation_data($variation_id, $i) {
+        if (isset($_POST['_supplier_id'][$i]) && !empty($_POST['_supplier_id'][$i])) {
+            $sid = sanitize_text_field($_POST['_supplier_id'][$i]);
+
+            // ۱. ذخیره شناسه تامین کننده در متای متغیر
+            update_post_meta($variation_id, '_supplier_id', $sid);
+
+            // ۲. تولید و ذخیره SKU اختصاصی برای این متغیر
+            $sku = LP_Helper::generate_sku($variation_id, $sid);
+
+            // استفاده از CRUD ووکامرس برای اطمینان از ذخیره SKU
+            $variation = wc_get_product($variation_id);
+            $variation->set_sku($sku);
+            $variation->save();
+        }
+    }
 }

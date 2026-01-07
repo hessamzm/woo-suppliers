@@ -1,23 +1,61 @@
-=== Lapx Supplier Manager & SKU Generator ===
-Contributors: hessamzm
-Tags: suppliers, sku, management, woocommerce
-Requires at least: 5.6
-Tested up to: 6.5
-Requires PHP: 7.4
-WC requires at least: 10.0
-Stable tag: 1.1.0
-License: GPLv2 or later
-License URI: https://www.gnu.org/licenses/gpl-2.0.html
+Lapx Supplier Manager & SKU Generator 
+افزونه‌ای حرفه‌ای و ماژولار برای وردپرس و ووکامرس جهت مدیریت تامین‌کنندگان کالا و تولید خودکار SKUهای هوشمند بر اساس دسته‌بندی و کد تامین‌کننده.
 
-== Description ==
-سیستم ماژولار مدیریت تامین‌کنندگان و تولید هوشمند SKU برای فروشگاه لپ‌ایکس.
+ ویژگی‌های کلیدی
+مدیریت تامین‌کنندگان: پنل اختصاصی برای افزودن، ویرایش و حذف تامین‌کنندگان با شناسه عددی.
 
-== Installation ==
-1. افزونه را دانلود کنید.
-2. در وردپرس به بخش افزونه‌ها > افزودن بروید.
-3. فایل zip را آپلود و نصب کنید.
-4. افزونه را فعال کنید.
+تولید SKU هوشمند: ایجاد خودکار SKU با فرمت SupplierID-CategoryID-RandomNumber.
 
-== Changelog ==
-= 1.1.0 =
-* اولین انتشار پایدار
+پشتیبانی از محصولات متغیر: قابلیت تعیین تامین‌کننده مجزا برای هر تنوع محصول (Variation).
+
+REST API امن: دارای Endpointهای اختصاصی و ایمن شده با سیستم احراز هویت ووکامرس.
+
+معماری ماژولار: کدنویسی شیءگرا (OOP) برای توسعه‌پذیری آسان و عدم تداخل با سایر افزونه‌ها.
+
+ نحوه نصب
+پوشه lapx-manager-addon را دانلود کرده و در مسیر wp-content/plugins/ سایت خود قرار دهید.
+
+به پنل مدیریت وردپرس رفته و افزونه را فعال کنید.
+
+از منوی جدید "تامین‌کنندگان"، لیست تامین‌کنندگان خود را همراه با آیدی عددی آن‌ها تعریف کنید.
+
+ راهنمای استفاده
+در پنل وردپرس:
+هنگام ویرایش محصول (ساده یا متغیر)، فیلد "تامین‌کننده (محصول از)" را انتخاب کنید.
+
+پس از ذخیره یا بروزرسانی، SKU محصول به صورت خودکار تولید و جایگزین می‌شود.
+
+استفاده از REST API:
+این افزونه از احراز هویت Consumer Key/Secret ووکامرس استفاده می‌کند.
+
+۱. دریافت لیست تامین‌کنندگان:
+HTTP
+
+GET /wp-json/lapx/v1/suppliers
+۲. بروزرسانی تامین‌کننده یک محصول:
+HTTP
+
+POST /wp-json/lapx/v1/update-supplier
+Content-Type: application/json
+
+{
+"product_id": 1234,
+"supplier_id": "5"
+}
+ ساختار پروژه (Modular structure)
+Plaintext
+
+lapx-manager-addon/
+├── lapx-manager-addon.php    # فایل اصلی و بارگذار
+├── includes/
+│   ├── class-admin.php       # مدیریت پنل ادمین
+│   ├── class-product.php     # منطق ووکامرس و فیلدها
+│   ├── class-api.php         # روت‌های REST API
+│   ├── class-helpers.php     # توابع کمکی و تولید SKU
+│   └── views/
+│       └── admin-page.php    # رابط کاربری پنل ادمین
+ توسعه‌دهنده
+HessamZM - GitHub Profile
+
+ لایسنس
+این پروژه تحت لایسنس GPL2 منتشر شده است

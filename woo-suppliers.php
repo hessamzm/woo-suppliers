@@ -1,9 +1,9 @@
 <?php
 /**
- * Plugin Name: Lapx Supplier Manager & SKU Generator
+ * Plugin Name: Supplier Manager & SKU Generator & api rest for Supplier
  * Plugin URI: https://github.com/hessamzm/woo-suppliers
  * Description: سیستم ماژولار مدیریت تامین‌کنندگان و تولید هوشمند SKU برای لاپکس.
- * Version: 1.1.0
+ * Version: 1.2.1
  * Author: hessamzm
  * Author URI: https://github.com/hessamzm
  * Requires PHP: 7.4
@@ -23,6 +23,7 @@ define('LP_PATH', plugin_dir_path(__FILE__));
 require_once LP_PATH . 'includes/class-helpers.php';
 require_once LP_PATH . 'includes/class-admin.php';
 require_once LP_PATH . 'includes/class-product.php';
+require_once LP_PATH . 'includes/class-api.php';
 
 // راه‌اندازی ماژول‌ها
 add_action('plugins_loaded', function() {
