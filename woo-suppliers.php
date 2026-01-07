@@ -3,7 +3,7 @@
  * Plugin Name: Supplier Manager & SKU Generator & api rest for Supplier
  * Plugin URI: https://github.com/hessamzm/woo-suppliers
  * Description: سیستم ماژولار مدیریت تامین‌کنندگان و تولید هوشمند SKU برای لاپکس.
- * Version: 1.2.1
+ * Version: 1.3
  * Author: hessamzm
  * Author URI: https://github.com/hessamzm
  * Requires PHP: 7.4
